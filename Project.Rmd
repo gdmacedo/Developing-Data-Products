@@ -1,0 +1,108 @@
+---
+title: "Developing Data Products                     MTCars : Motor Trend Car             São Paulo/Br | 2019 June"
+author: "Macedo, Glener Diniz                                                                                                                                                                                                 **Counselors**:                                                                                                                                            - Brian Caffo, Phd;                                                                                                                         - Jeff Leek, Phd;                                                                                                                                               - Roger D. Peng, PhD.                                                                                                                   -"
+date: "June 11, 2019"
+output:
+  ioslides_presentation:
+    css: ./css/style.css
+---
+<style type="text/css">
+@import url("http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.dpi = 96, collapse = TRUE, comment = "#>")
+library(shiny)
+library(ggplot2)
+```
+## About
+<div class = "tabletext">
+This Shiny application is part of the final project of the Developing Data Products course, where we cover the basics of data product creation using Shiny, R and interactive graphics packages. 
+
+Where we find in this menu, the following options:
+
+* **Project** - In this option we show you about the details of this application.
+* **Data** - The data used in this application originates from a Motor Trend Car (mtcars) Road Test data set.
+* **Graphics** - We present the graphs with Plot and Histogram so that you can interact in Histogram mode. E Choosing between Scatter and Line to Plot. 
+* **Author** - Basic information of the author of this application regarding their knowledge related to Data Sciences. 
+* **Help** - Information related to this application.
+</div><br>
+<div class = "tabletext">Loading the libraries that will be used.</div>
+* **library(shiny)**
+* **library(ggplot2)**
+
+
+## Obtaining and working data for graphs
+<div class = "tabletext">
+In a table is composed of 234 records, divided into various brands, models of cars and their characteristics.
+The data originates from a trend car engine trend test data set (mtcars). We can obtain this data in this operation:
+Choosing and Selecting Fields</div>
+```{r tableMpg}
+#Filter data based on selections
+tableMpg <- DT::renderDataTable(DT::datatable({data <- mpg
+                                               if (input$man != "All"){
+                                                    data <- data[data$manufacturer == input$man,]
+                                                                      }
+                                               if (input$cyl != "All"){
+                                                    data <- data[data$cyl == input$cyl,]
+                                                                      }
+                                               if (input$year != "All"){
+                                                    data <- data[data$year == input$year,]
+                                                                       }
+                                               if (input$trans != "All"){
+                                                    data <- data[data$trans == input$trans,]
+                                                                        }
+                                               data
+                                              }
+                                             )
+                               )
+```
+
+## The Process
+<div class = "tabletext"><b>The process</b>  This application analyzes the Mtcars data in the R dataset package. The data are from Motor Trend magazine in the USA of 1974 and comprise the fuel consumption and ten characteristics of the design and performance of the car for 32 cars.<br>
+Our mission here is to show through the cars table, the option to be able to view through a faster selection.<br>
+</div>
+```{r PlotHstgm, echo=TRUE, fig.align='center', fig.cap='mt Cars', cache=FALSE, results=FALSE, warning=FALSE, message=FALSE}
+PlotHstgm <- renderPlot({y <- mtcars[,1]
+                                  bins2 <- seq(min(y), 
+                                               max(y), 
+                                               length.out = input$mpg
+                                               )
+                                  hist(y, 
+                                       main="Miles Per Galon",
+                                       xlab="Galon", 
+                                       ylab="Miles",
+                                       breaks=bins2, 
+                                       col="blue", 
+                                       border = "black"
+                                      )
+                        }
+                       )
+plotOutput("PlotHstgm")
+```
+```{r echo=FALSE}
+PlotHstgm2 <- renderPlot({y <- mtcars[,1]
+                                  bins2 <- seq(1, 30, length.out = 15)  
+                                  hist(y, main="Miles Per Galon",
+                                       xlab="Galon", ylab="Miles",
+                                       breaks = bins2, 
+                                       col = "blue", 
+                                       border = "black"
+                                      )
+                         }
+                       )
+plotOutput("PlotHstgm2")
+```
+
+## The Graphic
+<div class = "tabletext">
+The chart below shows a data selection of the 32 cars and we present in this blue chart the ratio of miles per gallon performed by these cars.</div>
+```{r echo=FALSE}
+hist(mtcars$mpg, breaks = 'FD', col='blue', border='black', xlab = "Galon", ylab="Miles", main = "Miles Per Galon")
+```
+<div class = "tablereference">
+**References**</BR>
+- <B>Git Hub, Inc[US]</B> - This application can be accessed in github:</BR>
+https://github.com/gdmacedo/Developing-Data-Products</BR>
+- <B>RStudio, Inc[US]</B> - Just like the operation of this application in RPubs:</BR>
+https://gdmacedo.shinyapps.io/Developing_Data_Products/</div>
